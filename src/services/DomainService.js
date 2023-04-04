@@ -44,9 +44,23 @@ function createDomain(url) {
   });
 }
 
+function createSubdomain(subdomain, id) {
+  return new Promise((resolve, reject) => {
+    db.query(
+      "INSERT INTO SUBDOMAIN (ID, URL) VALUES (?, ?)",
+      [id, subdomain],
+      (err, results) => {
+        if (err) reject(err);
+        resolve(results);
+      }
+    );
+  });
+}
+
 module.exports = {
   getAllDomains,
   getOneDomain,
   getSubdomains,
   createDomain,
+  createSubdomain,
 };
