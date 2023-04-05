@@ -39,8 +39,19 @@ function logout(id) {
   });
 }
 
+function getToken() {
+  return new Promise((resolve, reject) => {
+    dbConnection.query("SELECT * FROM USERS", (err, result) => {
+      if (err) reject(err);
+      const { TOKEN } = result[0];
+      resolve(TOKEN);
+    });
+  });
+}
+
 module.exports = {
   authentication,
   setToken,
   logout,
+  getToken,
 };
