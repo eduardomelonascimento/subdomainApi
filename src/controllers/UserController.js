@@ -21,7 +21,17 @@ async function authentication(req, res) {
   }
 }
 
+async function logout(req, res) {
+  try {
+    const { id } = req.body;
+    await UserService.logout(id);
+    res.json({ status: "Successfully logout" });
+  } catch (error) {
+    res.status(500).json({ status: "Internal Server Error" });
+  }
+}
 
 module.exports = {
   authentication,
+  logout,
 };

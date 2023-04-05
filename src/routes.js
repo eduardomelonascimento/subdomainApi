@@ -10,5 +10,6 @@ router.post("/domains", DomainController.createDomain)
 router.delete("/domains/:id", DomainController.deleteDomain)
 
 router.post("/auth", UserController.authentication)
+router.post("/logout", UserController.logout)
 
 module.exports = router;

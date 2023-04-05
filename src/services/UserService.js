@@ -26,7 +26,21 @@ function setToken(id, token) {
   });
 }
 
+function logout(id) {
+  return new Promise((resolve, reject) => {
+    dbConnection.query(
+      "UPDATE USERS SET TOKEN = NULL WHERE USERS.ID = ?",
+      [id],
+      (err, result) => {
+        if (err) reject(err);
+        resolve(result);
+      }
+    );
+  });
+}
+
 module.exports = {
   authentication,
   setToken,
+  logout,
 };
