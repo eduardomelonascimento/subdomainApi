@@ -57,10 +57,24 @@ function createSubdomain(subdomain, id) {
   });
 }
 
+function deleteDomain(id) {
+  return new Promise((resolve, reject) => {
+    db.query(
+      "DELETE FROM DOMAIN WHERE DOMAIN.ID = ?",
+      [id],
+      (err, results) => {
+        if (err) reject(err);
+        resolve(results);
+      }
+    );
+  });
+}
+
 module.exports = {
   getAllDomains,
   getOneDomain,
   getSubdomains,
   createDomain,
   createSubdomain,
+  deleteDomain,
 };

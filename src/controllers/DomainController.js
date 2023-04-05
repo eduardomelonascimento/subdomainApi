@@ -1,4 +1,5 @@
 const DomainService = require("../services/DomainService");
+const SecurityTrailsService = require("../services/SecurityTrailsSevice");
 
 async function getAllDomains(req, res) {
   try {
@@ -32,9 +33,32 @@ async function getSubdomains(req, res) {
 async function createDomain(req, res) {
   try {
     const { url } = req.body;
-    await DomainService.createDomain(url);
-    res.status(201).json({
-      status: `Domain ${url} saved successfully.`,
+    const { subdomain_count, subdomains } =
+      await SecurityTrailsService.getSubdomains(url);
+    if (subdomain_count) {
+      const { insertId } = await DomainService.createDomain(url);
+      subdomains.forEach((subdomain) => {
+        DomainService.createSubdomain(subdomain, insertId);
+      });
+      res.status(201).json({
+        status: `Domain ${url} saved successfully.`,
+      });
+    } else {
+      res
+        .status(404)
+        .json({ message: "No subdomains were found for this domain." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+async function deleteDomain(req, res) {
+  try {
+    const { id } = req.params;
+    await DomainService.deleteDomain(id);
+    res.status(200).json({
+      status: "Success deleting domain",
     });
   } catch (error) {
     res.status(500).json({ error });
@@ -46,4 +70,5 @@ module.exports = {
   getOneDomain,
   getSubdomains,
   createDomain,
+  deleteDomain,
 };
