@@ -6,7 +6,7 @@ async function getAllDomains(req, res) {
     let domains = await DomainService.getAllDomains();
     res.status(200).json(domains);
   } catch (error) {
-    res.status(500).json({ error });
+    res.status(500).json({ error: error.message });
   }
 }
 
@@ -16,7 +16,7 @@ async function getOneDomain(req, res) {
     let domain = await DomainService.getOneDomain(id);
     res.status(200).json(domain);
   } catch (error) {
-    res.status(500).json({ error });
+    res.status(500).json({ error: error.message });
   }
 }
 
@@ -26,7 +26,7 @@ async function getSubdomains(req, res) {
     let subdomains = await DomainService.getSubdomains(id);
     res.status(200).json(subdomains);
   } catch (error) {
-    res.status(500).json({ error });
+    res.status(500).json({ error: error.message });
   }
 }
 
@@ -61,7 +61,7 @@ async function deleteDomain(req, res) {
       status: "Success deleting domain",
     });
   } catch (error) {
-    res.status(500).json({ error });
+    res.status(500).json({ error: error.message });
   }
 }
 
