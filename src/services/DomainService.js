@@ -23,12 +23,10 @@ function getOneDomain(id) {
 }
 
 function getSubdomains(id) {
-  console.log(id)
   return new Promise((resolve, reject) => {
     db.query(
       `SELECT DOMAIN.id_domain,
               DOMAIN.url_domain,
-              SUBDOMAIN.id_domain,
               SUBDOMAIN.subdomain
          FROM DOMAIN
          JOIN SUBDOMAIN 
@@ -37,7 +35,13 @@ function getSubdomains(id) {
       [id],
       (err, results) => {
         if (err) reject(err);
-        resolve(results);
+        const rset = {
+          id_domain: results[0].id_domain,
+          url_domain: results[0].url_domain,
+          subdomainCount: results.length,
+          subdomains: results.map(({ subdomain }) => subdomain),
+        };
+        resolve(rset);
       }
     );
   });
