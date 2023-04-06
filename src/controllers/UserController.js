@@ -14,7 +14,7 @@ async function authentication(req, res) {
         token,
       });
     } else {
-      res.status(401).json({ error: "Invalid credentials" });
+      res.status(422).json({ error: "Invalid email or password" });
     }
   } catch (error) {
     res.json({ error: error.message });
@@ -27,7 +27,7 @@ async function logout(req, res) {
     await UserService.logout(id);
     res.json({ status: "Successfully logout" });
   } catch (error) {
-    res.status(500).json({ status: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 }
 
