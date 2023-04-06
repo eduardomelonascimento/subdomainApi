@@ -2,7 +2,7 @@ const db = require("../config/db");
 
 function getAllDomains() {
   return new Promise((resolve, reject) => {
-    db.query("SELECT * FROM DOMAIN", (err, results) => {
+    db.query("SELECT * FROM DOMAIN ORDER BY id_domain ASC", (err, results) => {
       if (err) reject(err);
       resolve(results);
     });
@@ -12,7 +12,7 @@ function getAllDomains() {
 function getOneDomain(id) {
   return new Promise((resolve, reject) => {
     db.query(
-      "SELECT * FROM DOMAIN WHERE DOMAIN.ID = ?",
+      "SELECT * FROM DOMAIN WHERE DOMAIN.id_domain = ?",
       [id],
       (err, results) => {
         if (err) reject(err);
@@ -23,9 +23,17 @@ function getOneDomain(id) {
 }
 
 function getSubdomains(id) {
+  console.log(id)
   return new Promise((resolve, reject) => {
     db.query(
-      "SELECT * FROM SUBDOMAIN WHERE SUBDOMAIN.ID = ?",
+      `SELECT DOMAIN.id_domain,
+              DOMAIN.url_domain,
+              SUBDOMAIN.id_domain,
+              SUBDOMAIN.subdomain
+         FROM DOMAIN
+         JOIN SUBDOMAIN 
+           ON DOMAIN.id_domain = ?
+        WHERE DOMAIN.id_domain = SUBDOMAIN.id_domain`,
       [id],
       (err, results) => {
         if (err) reject(err);
@@ -37,17 +45,21 @@ function getSubdomains(id) {
 
 function createDomain(url) {
   return new Promise((resolve, reject) => {
-    db.query("INSERT INTO DOMAIN (URL) VALUES(?)", [url], (err, results) => {
-      if (err) reject(err);
-      resolve(results);
-    });
+    db.query(
+      "INSERT INTO DOMAIN (url_domain) VALUES(?)",
+      [url],
+      (err, results) => {
+        if (err) reject(err);
+        resolve(results);
+      }
+    );
   });
 }
 
 function createSubdomain(subdomain, id) {
   return new Promise((resolve, reject) => {
     db.query(
-      "INSERT INTO SUBDOMAIN (ID, URL) VALUES (?, ?)",
+      "INSERT INTO SUBDOMAIN (id_domain, subdomain) VALUES (?, ?)",
       [id, subdomain],
       (err, results) => {
         if (err) reject(err);
@@ -60,7 +72,7 @@ function createSubdomain(subdomain, id) {
 function deleteDomain(id) {
   return new Promise((resolve, reject) => {
     db.query(
-      "DELETE FROM DOMAIN WHERE DOMAIN.ID = ?",
+      "DELETE FROM DOMAIN WHERE DOMAIN.id_domain = ?",
       [id],
       (err, results) => {
         if (err) reject(err);
