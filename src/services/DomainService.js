@@ -22,17 +22,16 @@ function getOneDomain(id) {
   });
 }
 
-function getSubdomains(id, offset = "0") {
+function getSubdomains(id) {
   return new Promise((resolve, reject) => {
     db.query(
-            `SELECT DOMAIN.id_domain,
+      `SELECT DOMAIN.id_domain,
                     DOMAIN.url_domain,
                     SUBDOMAIN.subdomain
                FROM DOMAIN
                JOIN SUBDOMAIN 
                  ON DOMAIN.id_domain = ?
-              WHERE DOMAIN.id_domain = SUBDOMAIN.id_domain
- LIMIT 100 OFFSET 0`,
+              WHERE DOMAIN.id_domain = SUBDOMAIN.id_domain;`,
       [id],
       (err, results) => {
         if (err) reject(err);
